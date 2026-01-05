@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="feed-header d-flex align-items-center gap-3">
+    <a href="{{ url_for('main.index') }}" class="btn btn-light rounded-circle bg-transparent text-accent border-0"><i class="bi bi-arrow-left"></i></a>
+    <h5 class="fw-bold m-0">Komentar</h5>
+</div>
+
+<div class="p-3 border-bottom" style="border-color: var(--border-color) !important;">
+    <p class="fs-4">{{ caption }}</p>
+</div>
+
+<div class="p-3 border-bottom" style="border-color: var(--border-color) !important;">
+    <form action="{{ url_for('main.comment_post', post_id=post_id) }}" method="post" class="d-flex gap-2">
+        <input type="text" name="content" class="form-control rounded-pill" placeholder="Kirim balasan..." required>
+        <button class="btn btn-primary-custom rounded-pill px-4 mt-0 w-auto">Balas</button>
+    </form>
+</div>
+
+<div class="p-0">
+    {% for c in comments %}
+    <div class="p-3 border-bottom d-flex gap-3" style="border-color: var(--border-color) !important;">
+        <img src="{{ url_for('static', filename='uploads/' + (c[3] if c[3] else 'default.png')) }}" 
+             class="avatar"
+             onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ c[1] }}&background=random&color=fff&size=128';">
+        <div>
+            <div class="fw-bold text-accent">{{ c[1] }} <span class="text-muted small">· {{ c[2] }}</span></div>
+            <p class="mb-0">{{ c[0] }}</p>
+        </div>
+    </div>
+    {% else %}
+        <div class="p-4 text-center text-muted">Belum ada komentar.</div>
+    {% endfor %}
+</div>
+{% endblock %}

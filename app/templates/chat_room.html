@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="d-flex flex-column" style="height: 100vh;"> <div class="feed-header d-flex align-items-center gap-3 border-bottom p-2">
+        <a href="{{ url_for('main.chat_list') }}" class="btn btn-light rounded-circle p-2 bg-transparent text-accent border-0">
+            <i class="bi bi-arrow-left fs-5"></i>
+        </a>
+        <div class="d-flex align-items-center">
+            <img src="{{ url_for('static', filename='uploads/' + (friend[1] if friend[1] else 'default.png')) }}" 
+                 class="rounded-circle border me-2" style="width: 40px; height: 40px; object-fit: cover;"
+                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ friend[0] }}&background=random&color=fff&size=128';">
+            <h5 class="fw-bold m-0">{{ friend[0] }}</h5>
+        </div>
+    </div>
+
+    <div id="chat-box" class="flex-grow-1 overflow-auto p-3" style="scroll-behavior: smooth; background-color: var(--bg-main);">
+        {% for msg in messages %}
+            <div class="d-flex mb-2 {{ 'justify-content-end' if msg[1] == session['id'] else 'justify-content-start' }}">
+                <div class="p-2 px-3 rounded-4 {{ 'bg-warning text-dark' if msg[1] == session['id'] else 'bg-secondary text-white' }}" 
+                     style="max-width: 75%; word-wrap: break-word; background-color: {{ 'var(--accent)' if msg[1] == session['id'] else 'var(--bg-card)' }} !important; color: {{ '#000' if msg[1] == session['id'] else 'var(--text-main)' }} !important;">
+                    {{ msg[3] }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="p-3 border-top" style="border-color: var(--border-color) !important; background-color: var(--bg-main);">
+        <div class="input-group">
+            <input type="text" id="message-input" class="form-control rounded-pill border-0 py-2 px-3" 
+                   placeholder="Tulis pesan..." autocomplete="off" style="background-color: var(--bg-card) !important; color: var(--text-main) !important;">
+            <button onclick="sendMessage()" class="btn btn-primary-custom rounded-circle ms-2 mt-0 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var socket = io();
+    var room = "{{ room }}";
+    var receiver_id = {{ friend_id }};
+    var my_id = {{ session['id'] }};
+    var chatBox = document.getElementById('chat-box');
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    socket.emit('join', {room: room});
+
+    function sendMessage() {
+        var input = document.getElementById('message-input');
+        var msg = input.value;
+        if (msg.trim() !== "") {
+            socket.emit('send_message', {
+                message: msg, room: room, receiver_id: receiver_id
+            });
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    document.getElementById("message-input").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    socket.on('receive_message', function(data) {
+        var isMe = (data.sender === "{{ session['username'] }}");
+        var divRow = document.createElement('div');
+        divRow.className = "d-flex mb-2 " + (isMe ? "justify-content-end" : "justify-content-start");
+        
+        var divBubble = document.createElement('div');
+        divBubble.className = "p-2 px-3 rounded-4";
+        divBubble.style.maxWidth = "75%";
+        divBubble.style.wordWrap = "break-word";
+        
+        // Style manual via JS agar sesuai tema
+        if(isMe) {
+            divBubble.style.backgroundColor = "var(--accent)";
+            divBubble.style.color = "#000";
+        } else {
+            divBubble.style.backgroundColor = "var(--bg-card)";
+            divBubble.style.color = "var(--text-main)";
+        }
+        
+        divBubble.innerText = data.message;
+        divRow.appendChild(divBubble);
+        chatBox.appendChild(divRow);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+</script>
+{% endblock %}

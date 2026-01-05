@@ -1,0 +1,50 @@
+<div class="sidebar-left d-flex flex-column justify-content-between pb-3">
+    <div>
+        <div class="px-4 mb-4">
+            <h2>Tweets</h2>
+        </div>
+        
+        <nav class="nav flex-column px-2">
+            <a href="{{ url_for('main.index') }}" class="nav-link-custom {{ 'active' if request.endpoint == 'main.index' else '' }}">
+                <i class="bi bi-house-door-fill me-3"></i> <span>Home</span>
+            </a>
+            <a href="{{ url_for('main.explore') }}" class="nav-link-custom {{ 'active' if request.endpoint == 'main.explore' else '' }}">
+                <i class="bi bi-hash me-3"></i> <span>Explore</span>
+            </a>
+            <a href="{{ url_for('main.chat_list') }}" class="nav-link-custom {{ 'active' if 'chat' in request.endpoint else '' }}">
+                <i class="bi bi-envelope-fill me-3"></i> <span>Pesan</span>
+            </a>
+            <a href="{{ url_for('main.profile', username=session['username']) }}" class="nav-link-custom {{ 'active' if request.endpoint == 'main.profile' else '' }}">
+                <i class="bi bi-person-fill me-3"></i> <span>Profil</span>
+            </a>
+        </nav>
+        
+        <div class="px-3">
+            <button class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#postModal">POSTING</button>
+        </div>
+    </div>
+
+    <div class="px-3 mt-4">
+        <h6 class="text-muted mb-3 fw-bold ms-2" style="font-size: 0.8rem;">TAMPILAN</h6>
+        
+        <div class="appearance-control" style="cursor: pointer;" onclick="toggleTheme()">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-moon-stars-fill me-2" id="theme-icon"></i>
+                <span id="theme-text">Mode Gelap</span>
+            </div>
+            <i class="bi bi-chevron-right small"></i>
+        </div>
+
+        <div class="appearance-control">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-palette-fill me-2"></i>
+                <span>Warna Aksen</span>
+            </div>
+            <input type="color" id="accent-color-picker" value="#ffd400" title="Ubah warna aksen">
+        </div>
+
+         <a href="{{ url_for('auth.logout') }}" class="nav-link-custom text-danger mt-2">
+            <i class="bi bi-box-arrow-left me-3"></i> <span>Logout</span>
+        </a>
+    </div>
+</div>

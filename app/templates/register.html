@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block auth_content %}
+<div class="card border-0 shadow-lg p-4 rounded-4" style="width: 100%; max-width: 400px; background-color: var(--bg-card); color: var(--text-main);">
+    <div class="text-center mb-4">
+        <i class="bi bi-hexagon-fill fs-1 text-accent"></i>
+        <h3 class="fw-bold mt-3">Buat Akun</h3>
+    </div>
+    <form action="{{ url_for('auth.register') }}" method="post">
+        <div class="mb-3">
+            <input type="text" name="username" class="form-control py-2 rounded-pill" placeholder="Username" required>
+        </div>
+        <div class="mb-3">
+            <input type="email" name="email" class="form-control py-2 rounded-pill" placeholder="Email" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" name="password" class="form-control py-2 rounded-pill" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn-primary-custom w-100 rounded-pill py-2 fw-bold mt-2">Daftar</button>
+    </form>
+    <div class="text-center mt-3">
+        <small>Sudah punya akun? <a href="{{ url_for('auth.login') }}" class="text-accent text-decoration-none">Login</a></small>
+    </div>
+</div>
+{% endblock %}

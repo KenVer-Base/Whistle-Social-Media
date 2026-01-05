@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+
+:root {
+    /* --- CONFIG WARNA DARK MODE (DEFAULT) --- */
+    --bg-main: #000000;
+    --bg-card: #16181c;
+    --bg-hover: #1d1f23;
+    
+    --text-main: #e7e9ea;       /* Putih Tulang (Utama) */
+    
+    /* PERBAIKAN DI SINI: Warna teks keterangan dibuat jauh lebih terang */
+    --text-muted: #aab8c2;      /* Abu-abu Terang (Bukan gelap) */
+    
+    --border-color: #2f3336;
+    
+    /* Aksen */
+    --accent: #ffd400;
+    --accent-rgb: 255, 212, 0;
+}
+
+/* --- CONFIG WARNA LIGHT MODE --- */
+body.light-mode {
+    --bg-main: #ffffff;
+    --bg-card: #f7f9f9;
+    --bg-hover: #eff3f4;
+    
+    --text-main: #0f1419;       /* Hitam */
+    --text-muted: #536471;      /* Abu-abu Gelap (Agar terbaca di putih) */
+    
+    --border-color: #eff3f4;
+}
+
+/* --- BASE STYLES --- */
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden;
+}
+
+a { text-decoration: none !important; color: inherit; transition: 0.2s; }
+a:hover { color: var(--accent) !important; }
+
+/* PAKSA SEMUA HEADING & TEKS UTAMA */
+h1, h2, h3, h4, h5, h6, p, span, div, label {
+    color: var(--text-main);
+}
+
+/* PERBAIKAN UTAMA: PAKSA TEKS KETERANGAN JADI TERANG */
+.text-muted, .small, small {
+    color: var(--text-muted) !important;
+}
+
+/* --- INPUT & FORM --- */
+.form-control {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-main) !important;
+}
+
+.form-control:focus {
+    background-color: var(--bg-card) !important;
+    border-color: var(--accent) !important;
+    color: var(--text-main) !important;
+    box-shadow: 0 0 0 0.2rem rgba(var(--accent-rgb), 0.25) !important;
+}
+
+/* Placeholder input jangan terlalu gelap */
+.form-control::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.7;
+}
+
+/* --- LAYOUT GRID --- */
+.layout-grid {
+    display: grid;
+    grid-template-columns: 275px 600px 350px;
+    gap: 20px;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar-left {
+    position: sticky; top: 0; height: 100vh;
+    padding-top: 40px; /* Jarak atas diperbaiki */
+    border-right: 1px solid var(--border-color);
+}
+
+.main-feed {
+    border-right: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color);
+    min-height: 100vh;
+}
+
+.feed-header {
+    position: sticky; top: 0; z-index: 99;
+    background: rgba(var(--bg-main), 0.85); /* Glassmorphism */
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px; /* Jarak dalam diperbaiki */
+    font-weight: 700; font-size: 1.3rem;
+    color: var(--text-main);
+}
+
+/* --- NAVIGASI --- */
+.nav-link-custom {
+    display: flex; align-items: center; padding: 15px 25px;
+    margin-bottom: 10px; border-radius: 30px;
+    font-size: 1.2rem; font-weight: 600;
+    color: var(--text-main) !important;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.nav-link-custom:hover {
+    background-color: rgba(var(--accent-rgb), 0.15);
+    color: var(--accent) !important;
+}
+
+.nav-link-custom.active {
+    background-color: var(--accent);
+    color: #000000 !important; /* Teks Hitam di tombol aktif */
+    box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.4);
+}
+.nav-link-custom.active i, .nav-link-custom.active span {
+    color: #000000 !important;
+}
+
+/* Tombol Besar */
+.btn-primary-custom {
+    background-color: var(--accent);
+    color: #000000 !important;
+    border-radius: 30px; font-weight: 800; padding: 12px 0; width: 100%;
+    border: none; margin-top: 20px; transition: 0.3s;
+    text-transform: uppercase; letter-spacing: 1px;
+}
+.btn-primary-custom:hover {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.5);
+}
+
+/* --- KARTU & WIDGET --- */
+.post-card {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-main);
+    transition: 0.2s;
+}
+.post-card:hover { background-color: var(--bg-hover); }
+
+.trend-box {
+    background-color: var(--bg-card);
+    border-radius: 16px; padding: 20px;
+    margin-top: 20px; border: 1px solid var(--border-color);
+}
+
+/* --- UTILITIES --- */
+.avatar {
+    width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+}
+
+.text-accent { color: var(--accent) !important; }
+
+/* Modal */
+.modal-content {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+.modal-header, .modal-footer { border-color: var(--border-color); }
+.btn-close { filter: invert(1); }
+body.light-mode .btn-close { filter: invert(0); }
+
+/* Tombol Color Picker */
+.appearance-control {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 15px; background: var(--bg-card);
+    border-radius: 20px; margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+}

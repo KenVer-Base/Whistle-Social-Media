@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="feed-header"><h5 class="fw-bold m-0">Hasil: "{{ query }}"</h5></div>
+<div class="p-3">
+    {% if users %}
+        <h6>Orang</h6>
+        {% for u in users %}
+        <div class="d-flex align-items-center mb-3 p-2 border rounded">
+            <img src="{{ url_for('static', filename='uploads/' + (u[2] if u[2] else 'default.png')) }}" class="avatar me-3">
+            <a href="/profile/{{ u[1] }}" class="fw-bold text-dark text-decoration-none">{{ u[1] }}</a>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if posts %}
+        <h6 class="mt-4">Postingan</h6>
+        {% for post in posts %}
+        <div class="post-card border-bottom p-3">
+            <div class="d-flex align-items-center mb-2">
+                <img src="{{ url_for('static', filename='uploads/' + (post[6] if post[6] else 'default.png')) }}" class="avatar-small me-2">
+                <span class="fw-bold">{{ post[4] }}</span>
+            </div>
+            <p>{{ post[1] }}</p>
+            <a href="/comment/{{ post[0] }}" class="small text-muted">Lihat Komentar</a>
+        </div>
+        {% endfor %}
+    {% endif %}
+    
+    {% if not users and not posts %}
+        <p class="text-muted text-center">Tidak ditemukan hasil.</p>
+    {% endif %}
+</div>
+{% endblock %}
