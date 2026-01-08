@@ -4,7 +4,7 @@ from app import mysql
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/auth/login', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
@@ -21,9 +21,9 @@ def login():
             return redirect(url_for('main.index'))
         else:
             flash('Email atau password salah.', 'danger')
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
-@auth.route('/auth/register', methods=['GET', 'POST'])
+@auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
@@ -39,7 +39,7 @@ def register():
             flash('Username atau Email sudah digunakan.', 'danger')
         finally:
             cur.close()
-    return render_template('register.html')
+    return render_template('auth/register.html')
 
 @auth.route('/logout')
 def logout():
