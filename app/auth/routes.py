@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import mysql # Import database dari init
+from app import mysql 
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/auth/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
@@ -18,13 +18,12 @@ def login():
             session['loggedin'] = True
             session['id'] = user[0]
             session['username'] = user[1]
-            return redirect(url_for('main.index')) # Perhatikan 'main.index'
+            return redirect(url_for('main.index'))
         else:
-            flash('Login gagal, periksa email/password.', 'danger')
-
+            flash('Email atau password salah.', 'danger')
     return render_template('login.html')
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth.route('/auth/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']

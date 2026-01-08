@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="feed-header mb-3">Jelajahi</div>
+<div class="px-0">
+    <form action="{{ url_for('main.explore') }}" method="GET" class="mb-4">
+        <div class="input-group bg-card rounded-4 p-1 border" style="background-color: var(--bg-card); border-color: var(--border-color) !important;">
+            <span class="input-group-text bg-transparent border-0 text-accent ps-3"><i class="bi bi-search"></i></span>
+            <input type="text" name="q" class="form-control border-0 bg-transparent py-2 shadow-none" placeholder="Cari kreator atau karya..." value="{{ query }}">
+        </div>
+    </form>
+    {% if users %}
+        <h6 class="text-uppercase fw-bold text-muted small mt-4 mb-3 ps-1">Kreator</h6>
+        <div class="d-flex flex-column gap-3">
+            {% for u in users %}
+            <div class="d-flex align-items-center p-3 rounded-4 position-relative post-card m-0 border-0 shadow-sm">
+                <img src="{{ url_for('static', filename='uploads/' + (u[2] if u[2] else 'default.png')) }}" class="avatar me-3"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ u[1] }}&background=random&color=fff&size=128';">
+                <div class="flex-grow-1">
+                    <a href="{{ url_for('main.profile', username=u[1]) }}" class="fw-bold fs-5 stretched-link text-main text-decoration-none">{{ u[1] }}</a>
+                    <div class="text-muted small">@{{ u[1] }}</div>
+                </div>
+                <button class="btn btn-sm btn-outline-secondary rounded-pill px-3">Lihat</button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if posts %}
+        <h6 class="mt-4 mb-3 text-muted ps-1">Karya Ditemukan</h6>
+        {% for post in posts %}
+        <div class="post-card rounded-4 mb-3 p-3 position-relative">
+            <div class="d-flex align-items-center mb-2">
+                <img src="{{ url_for('static', filename='uploads/' + (post[6] if post[6] else 'default.png')) }}" class="avatar me-2" style="width: 25px; height: 25px;"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ post[4] }}&background=random&color=fff&size=128';">
+                <span class="fw-bold small">{{ post[4] }}</span>
+            </div>
+            <p class="mb-1 text-truncate">{{ post[1] }}</p>
+            <a href="{{ url_for('main.comment_post', post_id=post[0]) }}" class="small text-accent stretched-link fw-bold text-decoration-none">Lihat Detail</a>
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% if not users and not posts and query %}
+        <div class="text-center py-5 trend-box">
+            <i class="bi bi-search fs-1 text-muted"></i>
+            <p class="text-muted mt-3">Tidak ditemukan hasil untuk "{{ query }}"</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

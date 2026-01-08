@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
     <title>Social App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -11,39 +12,35 @@
 
     {% if session.loggedin %}
     <div class="layout-grid">
-        
         {% include 'includes/sidebar.html' %}
-
         <div class="main-feed">
              {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} rounded-0 m-0 border-0">{{ message }}</div>
+                        <div class="alert alert-{{ category }} rounded-4 mb-4 border-0 shadow-sm">{{ message }}</div>
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            
             {% block content %}{% endblock %}
         </div>
-
         {% include 'includes/footer.html' %}
-
     </div>
 
     <div class="modal fade" id="postModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content rounded-4">
-          <div class="modal-header border-0">
-            <h5 class="modal-title fw-bold">Buat Postingan</h5>
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 p-2">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold">Posting sesuatu</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
             <form action="{{ url_for('main.index') }}" method="post" enctype="multipart/form-data">
-                <textarea name="caption" class="form-control border-0 fs-5 mb-3" rows="4" placeholder="Apa yang sedang terjadi?" required></textarea>
-                <input type="file" name="file" class="form-control">
-                <div class="text-end mt-4">
-                    <button class="btn-primary-custom w-25 py-2">Kirim</button>
+                <textarea name="caption" class="form-control border-0 fs-5 mb-3" rows="4" placeholder="Tulis sesuatu..." required></textarea>
+                <div class="mb-3">
+                    <label class="form-label small text-muted">Lampiran</label>
+                    <input type="file" name="file" class="form-control">
                 </div>
+                <button class="btn-primary-custom w-100 py-2 mt-2">Posting Sekarang</button>
             </form>
           </div>
         </div>
@@ -51,58 +48,136 @@
     </div>
 
     {% else %}
-        <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="d-flex justify-content-center align-items-center vh-100 px-3">
             {% block auth_content %}{% endblock %}
         </div>
     {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // --- LOGIKA WARNA PINTAR ---
         function hexToRgb(hex) {
             var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? parseInt(result[1], 16) + ", " + parseInt(result[2], 16) + ", " + parseInt(result[3], 16) : "255, 212, 0";
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
         }
+
+        function setContrastText(hexColor) {
+            const rgb = hexToRgb(hexColor);
+            if (!rgb) return;
+            const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+            const root = document.documentElement;
+
+            if (brightness > 125) {
+                root.style.setProperty('--text-on-accent', '#111111');
+            } else {
+                root.style.setProperty('--text-on-accent', '#ffffff');
+            }
+        }
+
+        // Definisi Element
         const body = document.getElementById('body-app');
         const themeIcon = document.getElementById('theme-icon');
         const themeText = document.getElementById('theme-text');
         const colorPicker = document.getElementById('accent-color-picker');
         const root = document.documentElement;
 
+        // --- FUNGSI UPDATE UI ICON (Fix Logika Disini) ---
+        function updateThemeUI() {
+            // Cek kondisi class body saat ini
+            if (document.body.classList.contains('light-mode')) {
+                // Jika sedang Light Mode -> Tawarkan tombol ke Dark Mode (Icon Bulan)
+                if(themeIcon) themeIcon.className = 'bi bi-moon-stars-fill me-2 text-accent';
+                if(themeText) themeText.innerText = 'Mode Gelap';
+            } else {
+                // Jika sedang Dark Mode -> Tawarkan tombol ke Light Mode (Icon Matahari)
+                if(themeIcon) themeIcon.className = 'bi bi-sun-fill me-2 text-accent';
+                if(themeText) themeText.innerText = 'Mode Terang';
+            }
+        }
+
+        // --- INISIALISASI SAAT LOAD ---
         const currentTheme = localStorage.getItem('theme');
         const currentAccent = localStorage.getItem('accent');
 
+        // 1. Terapkan Tema
         if (currentTheme === 'light') {
             body.classList.add('light-mode');
-            if(themeIcon) themeIcon.className = 'bi bi-sun-fill me-2';
-            if(themeText) themeText.innerText = 'Mode Terang';
         }
+        
+        // 2. Terapkan Icon yang Sesuai (Panggil fungsi update UI segera)
+        updateThemeUI();
+
+        // 3. Terapkan Accent Color
         if (currentAccent) {
             root.style.setProperty('--accent', currentAccent);
-            root.style.setProperty('--accent-rgb', hexToRgb(currentAccent));
+            const rgbVal = hexToRgb(currentAccent);
+            if(rgbVal) root.style.setProperty('--accent-rgb', `${rgbVal.r}, ${rgbVal.g}, ${rgbVal.b}`);
             if(colorPicker) colorPicker.value = currentAccent;
+            setContrastText(currentAccent);
+        } else {
+            setContrastText('#f4d03f'); 
         }
 
+        // --- FUNGSI TOGGLE (DIPANGGIL TOMBOL) ---
         function toggleTheme() {
-            body.classList.toggle('light-mode');
-            let theme = 'dark';
-            if (body.classList.contains('light-mode')) {
+            // Toggle class pada body
+            document.body.classList.toggle('light-mode');
+            
+            let theme = 'dark'; // Default simpanan
+
+            // Cek state baru untuk disimpan
+            if (document.body.classList.contains('light-mode')) {
                 theme = 'light';
-                themeIcon.className = 'bi bi-sun-fill me-2';
-                themeText.innerText = 'Mode Terang';
-            } else {
-                themeIcon.className = 'bi bi-moon-stars-fill me-2';
-                themeText.innerText = 'Mode Gelap';
-            }
+            } 
+
+            // Simpan ke storage
             localStorage.setItem('theme', theme);
+            
+            // Update UI Icon agar sinkron
+            updateThemeUI();
         }
 
+        // Event Listener Color Picker
         if(colorPicker) {
             colorPicker.addEventListener('input', function(e) {
                 const color = e.target.value;
                 root.style.setProperty('--accent', color);
-                root.style.setProperty('--accent-rgb', hexToRgb(color));
+                const rgbVal = hexToRgb(color);
+                if(rgbVal) root.style.setProperty('--accent-rgb', `${rgbVal.r}, ${rgbVal.g}, ${rgbVal.b}`);
                 localStorage.setItem('accent', color);
+                setContrastText(color);
             });
+        }
+
+        // --- FUNGSI LIKE TANPA REFRESH ---
+        function toggleLike(event, postId) {
+            event.preventDefault(); // Mencegah pindah halaman
+            
+            fetch('/like/' + postId, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Update Angka
+                    document.getElementById('count-like-' + postId).innerText = data.likes + ' Dukungan';
+                    
+                    // Update Warna Icon
+                    const icon = document.getElementById('icon-like-' + postId);
+                    if (data.action === 'liked') {
+                        icon.classList.add('text-danger');
+                    } else {
+                        icon.classList.remove('text-danger');
+                    }
+                } else if (data.status === 'error') {
+                     window.location.href = "{{ url_for('auth.login') }}";
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
     </script>
 </body>

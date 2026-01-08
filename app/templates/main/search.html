@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="feed-header mb-3">
+    <span class="text-muted fw-normal fs-6">Hasil:</span>
+    <h4 class="fw-bold">"{{ query }}"</h4>
+</div>
+<div class="px-0">
+    {% if users %}
+        <h6 class="text-uppercase fw-bold text-muted small mt-4 mb-3 ps-1">Kreator</h6>
+        <div class="d-flex flex-column gap-3">
+            {% for u in users %}
+            <div class="post-card p-3 d-flex align-items-center mb-0">
+                <img src="{{ url_for('static', filename='uploads/' + (u[2] if u[2] else 'default.png')) }}" class="avatar me-3" style="width: 50px; height: 50px;"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ u[1] }}&background=random&color=fff&size=128';">
+                <div class="flex-grow-1">
+                    <a href="{{ url_for('main.profile', username=u[1]) }}" class="fw-bold text-main text-decoration-none fs-5 stretched-link">{{ u[1] }}</a>
+                    <div class="text-muted small">@{{ u[1] }}</div>
+                </div>
+                <i class="bi bi-chevron-right text-muted"></i>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if posts %}
+        <h6 class="text-uppercase fw-bold text-muted small mt-5 mb-3 ps-1">Postingan</h6>
+        <div class="d-flex flex-column gap-3">
+            {% for post in posts %}
+            <div class="post-card p-3 position-relative mb-0">
+                <div class="d-flex align-items-center mb-2">
+                    <img src="{{ url_for('static', filename='uploads/' + (post[6] if post[6] else 'default.png')) }}" class="avatar me-2" style="width: 28px; height: 28px;"
+                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ post[4] }}&background=random&color=fff&size=128';">
+                    <span class="fw-bold small">{{ post[4] }}</span>
+                </div>
+                <p class="mb-2 text-truncate" style="max-width: 90%;">{{ post[1] }}</p>
+                <a href="{{ url_for('main.comment_post', post_id=post[0]) }}" class="small text-accent fw-bold text-decoration-none stretched-link">Lihat Diskusi</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
