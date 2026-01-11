@@ -471,3 +471,16 @@ def profile(username):
 
     cur.close()
     return render_template('user/profile.html', user=user, posts=posts, followers=followers, following=following, is_following=is_following, current_user=current_user)
+
+@main.app_context_processor
+def inject_current_user():
+    if 'loggedin' in session:
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "SELECT id, username, profile_pic, full_name FROM users WHERE id = %s",
+            [session['id']]
+        )
+        user = cur.fetchone()
+        cur.close()
+        return dict(current_user=user)
+    return dict(current_user=None)
