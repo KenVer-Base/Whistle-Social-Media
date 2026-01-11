@@ -1,9 +1,9 @@
-# 🐦 Whistle - Social Media Platform
+# 📢 Whistle - Social Media Platform
 
 **Whistle** adalah aplikasi media sosial sederhana mirip Twitter/X yang dibangun menggunakan **Python Flask**.  
 Proyek ini berfokus pada interaksi pengguna secara **real-time** (Chat & Notifikasi) serta pengalaman pengguna yang mulus tanpa *reload* halaman berlebih menggunakan **AJAX**.
 
-> Dibuat sebagai **Proyek Perkuliahan Pemrograman Web**
+> Dibuat sebagai **Proyek Perkuliahan Pemrograman Web Praktik**
 
 ---
 
@@ -13,9 +13,6 @@ Proyek ini berfokus pada interaksi pengguna secara **real-time** (Chat & Notifik
 - **Postingan Multimedia**: Mendukung teks, gambar, dan video
 - **Explore & Following**:
   - *Explore* → semua postingan global  
-<<<<<<< HEAD
-  - *Following* → postingan dari user yang diikuti
-=======
   - *Home* → postingan dari user yang diikuti
 - **Hashtag & Mention**: Mendukung format teks kaya (*rich text*) sederhana
 
@@ -53,11 +50,7 @@ Proyek ini berfokus pada interaksi pengguna secara **real-time** (Chat & Notifik
 - Bootstrap Icons
 
 ### Database
-<<<<<<< HEAD
-- MySQL / MariaDB
-=======
 - MySQL 
->>>>>>> 9a3fbd0ca542d2feede7902ffc6dad5d0d8c2d28
 
 ---
 
@@ -85,7 +78,7 @@ pip install -r requirements.txt
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'whistle_db'
+app.config['MYSQL_DB'] = 'social_media_db'
 ```
 
 ### 5. Jalankan Aplikasi
@@ -119,9 +112,6 @@ http://127.0.0.1:5000
 
 ## 👤 Author
 
-<<<<<<< HEAD
-**Faqih Al Bashori**  
-=======
 **Faqih Al Bashori**  
 Mahasiswa Informatika  
 Universitas Teknologi Yogyakarta (2024)
